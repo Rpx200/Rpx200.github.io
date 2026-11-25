@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SystemBiology · PhenoLogic</title>
+<meta name="description" content="PhenoLogic, l'app iOS gratuite de SystemBiology : votre carnet de terrain pour le phénotypage. Saisissez, dictez ou scannez vos relevés, puis exportez-les en Excel ou CSV. Tout reste sur l'appareil.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PhenoLogic · du terrain à Excel">
+<meta property="og:description" content="Le carnet de terrain pour le phénotypage : saisie, dictée, scan de fiches papier et export Excel ou CSV, 100 % sur l'appareil.">
+<meta property="og:site_name" content="SystemBiology">
+<meta property="og:image" content="https://rpx200.github.io/img/icon.png">
+<meta property="og:url" content="https://rpx200.github.io/">
+<link rel="canonical" href="https://rpx200.github.io/">
+<meta name="twitter:card" content="summary">
+<meta name="apple-itunes-app" content="app-id=6800425396">
+<link rel="icon" type="image/png" href="img/icon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<style>
+/* VOICE sobre et précis, façon page produit Apple
+   IDEA le carnet de terrain qui devient un tableur
+   PICTURE la vraie fiche PhenoLogic dans un iPhone, reliée au tableau exporté
+   COLOUR blanc pur ou noir, gris Apple, bleu #0066cc / #2997ff
+   TYPE police système (SF Pro), titres gras resserrés
+   LAYOUT titre en haut, image pleine largeur dessous ; sur iPhone tout s'empile */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#000);--card:light-dark(#f5f5f7,#1c1c1e);--ink:light-dark(#1d1d1f,#f5f5f7);--mute:light-dark(#6e6e73,#a1a1a6);--line:light-dark(#d2d2d7,#38383a);--acc:light-dark(#0066cc,#2997ff);--accbg:light-dark(#e8f1fb,#0a2540);--badge:light-dark(#000,#fff);--badgeink:light-dark(#fff,#000);--deep:light-dark(#1d1d1f,#1c1c1e)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px;-webkit-text-size-adjust:100%}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--acc);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--acc);outline-offset:3px;border-radius:6px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--bg);padding:10px 14px;z-index:20}
+.skip:focus{left:16px}
+.wrap{max-width:1120px;margin:0 auto}
+.band{padding-block:clamp(48px,7vw,104px);padding-left:max(5vw,16px,env(safe-area-inset-left,0px));padding-right:max(5vw,16px,env(safe-area-inset-right,0px))}
+.alt{background:var(--card)}
+h1,h2,h3{margin:0;letter-spacing:-.022em;text-wrap:balance}
+h1{font-size:clamp(38px,6.4vw,68px);line-height:1.04;font-weight:700}
+h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08;font-weight:700}
+h3{font-size:20px;line-height:1.25;font-weight:600}
+p{margin:0}
+.lead{font-size:clamp(19px,2vw,22px);color:var(--mute);max-width:36em;margin-top:18px;text-wrap:pretty}
+.sec-head{max-width:760px;margin-bottom:clamp(32px,4vw,56px)}
+/* nav */
+header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.bar{display:flex;align-items:center;gap:16px;height:56px;padding-inline:max(5vw,16px);max-width:1220px;margin:0 auto}
+.logo{font-size:19px;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
+.logo b{color:var(--acc);font-weight:700}
+.logo:hover{text-decoration:none}
+nav ul{display:flex;gap:26px;list-style:none;margin:0 0 0 auto;padding:0}
+nav a{color:var(--ink);font-size:14px;opacity:.85}
+.lang{display:flex;border:1px solid var(--line);border-radius:99px;padding:2px;margin-left:8px}
+.lang button{font:inherit;font-size:13px;font-weight:600;border:0;background:none;color:var(--mute);padding:0 11px;min-height:32px;min-width:40px;border-radius:99px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+@media(max-width:760px){.lang{margin-left:auto}}
+/* buttons */
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;margin-top:30px}
+.store{display:inline-flex;align-items:center;gap:10px;background:var(--badge);color:var(--badgeink);border-radius:12px;padding:8px 20px 8px 16px;min-height:52px}
+.store:hover{text-decoration:none;opacity:.88}
+.store svg{width:26px;height:26px;fill:currentColor}
+.store small{display:block;font-size:11px;line-height:1.1}
+.store strong{display:block;font-size:20px;line-height:1.1;font-weight:600;letter-spacing:-.01em}
+.meta{font-size:15px;color:var(--mute)}
+.pill{display:inline-flex;align-items:center;min-height:44px;padding:0 22px;border-radius:99px;background:var(--acc);color:#fff;font-weight:600}
+.pill:hover{text-decoration:none;filter:brightness(1.08)}
+/* hero picture */
+.hero{padding-bottom:0}
+.hero-top{display:flex;gap:clamp(20px,3vw,36px);align-items:flex-start}
+.hero-top .appicon{width:clamp(64px,9vw,104px);height:auto;border-radius:22.5%;flex:none;box-shadow:0 0 0 1px var(--line)}
+@media(max-width:600px){.hero-top{flex-direction:column}}
+.stage{display:grid;grid-template-columns:minmax(0,290px) minmax(60px,180px) minmax(0,540px);justify-content:center;align-items:center;margin-top:clamp(40px,6vw,72px);padding-bottom:clamp(40px,6vw,80px)}
+.phone{width:100%;max-width:290px;background:#1d1d1f;border-radius:48px;padding:10px;box-shadow:0 0 0 2px #3a3a3c inset,0 30px 60px -30px rgba(0,0,0,.45);justify-self:end}
+.phone img{width:100%;height:auto;aspect-ratio:1320/2868;border-radius:38px;background:#fff}
+.link{position:relative;height:2px;background:repeating-linear-gradient(90deg,var(--acc) 0 8px,transparent 8px 14px);margin-inline:10px}
+.link::after{content:"";position:absolute;right:-4px;top:-6px;border:7px solid transparent;border-left:10px solid var(--acc);border-right:0}
+.link span{position:absolute;left:50%;top:-34px;transform:translateX(-50%);font-size:12px;font-weight:600;color:var(--acc);white-space:nowrap;background:var(--bg);padding:2px 8px}
+.sheet{background:light-dark(#fff,#1c1c1e);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 24px 50px -32px rgba(0,0,0,.4)}
+.sheet-top{display:flex;align-items:center;gap:8px;padding:10px 14px;background:light-dark(#f5f5f7,#2c2c2e);border-bottom:1px solid var(--line);font-size:13px;font-weight:600}
+.sheet-top i{width:18px;height:18px;border-radius:4px;background:#107c41;flex:none}
+.sheet-top span{color:var(--mute);font-weight:400;margin-left:auto;white-space:nowrap}
+.grid-x{overflow-x:auto}
+.grid-x table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+.grid-x th,.grid-x td{border-right:1px solid light-dark(#e5e5ea,#38383a);border-bottom:1px solid light-dark(#e5e5ea,#38383a);padding:6px 10px;text-align:right;white-space:nowrap}
+.grid-x th{background:light-dark(#fafafa,#232325);color:var(--mute);font-weight:600}
+.grid-x td:nth-child(2),.grid-x th:nth-child(2),.grid-x td:nth-child(3),.grid-x th:nth-child(3){text-align:left}
+.grid-x .n{color:var(--mute);background:light-dark(#fafafa,#232325);text-align:center;width:32px;padding-inline:4px}
+.grid-x tr.new td:not(.n){background:var(--accbg)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:820px){.stage{grid-template-columns:minmax(0,1fr);justify-items:center}.phone{justify-self:center;max-width:260px}.link{width:2px;height:56px;margin:14px 0;background:repeating-linear-gradient(180deg,var(--acc) 0 8px,transparent 8px 14px)}.link::after{right:-6px;top:auto;bottom:-6px;border:7px solid transparent;border-top:10px solid var(--acc);border-bottom:0}.link span{left:14px;top:50%;transform:translateY(-50%)}.sheet{width:100%;max-width:540px}}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px)}
+.step{border-top:2px solid var(--ink);padding-top:18px}
+.step b{display:block;font-size:44px;line-height:1;font-weight:700;color:var(--acc);margin-bottom:14px;letter-spacing:-.03em}
+.step p{color:var(--mute);margin-top:8px}
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{background:var(--card);border-radius:22px;padding:clamp(24px,3vw,34px)}
+.alt .card{background:var(--bg)}
+.card svg{width:34px;height:34px;stroke:var(--acc);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;margin-bottom:18px}
+.card p{color:var(--mute);margin-top:8px}
+@media(max-width:960px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:860px){.steps,.cards.three{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.cards{grid-template-columns:minmax(0,1fr)}}
+/* screens carousel */
+.shots{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 4px 18px;scrollbar-width:thin;margin:0}
+.shot{flex:0 0 auto;width:min(260px,72vw);scroll-snap-align:start;margin:0}
+.shot img{width:100%;height:auto;border-radius:24px;background:#eef2f0}
+.shot figcaption{margin-top:14px;text-align:center}
+.shot figcaption span{display:block;font-weight:600}
+.shot figcaption span+span{font-weight:400;color:var(--mute);font-size:15px}
+.ctl{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+.ctl button{width:44px;height:44px;border-radius:50%;border:0;background:var(--bg);color:var(--ink);font-size:22px;cursor:pointer}
+.ctl button:hover{background:var(--line)}
+/* privacy */
+.deep{background:var(--deep);color:#f5f5f7}
+.deep .lead{color:#a1a1a6}
+.privacy{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(32px,5vw,80px);align-items:start}
+.plist{list-style:none;margin:0;padding:0}
+.plist li{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid #3a3a3c}
+.plist li::before{content:"";flex:none;width:22px;height:22px;margin-top:2px;border-radius:50%;background:#2997ff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%23fff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.plist b{display:block}
+.plist span{color:#a1a1a6;font-size:16px}
+.deep .fine{font-size:15px;margin-top:22px}
+.deep .fine a{color:#2997ff;font-weight:600}
+@media(max-width:820px){.privacy{grid-template-columns:minmax(0,1fr)}}
+/* faq */
+.faq details{max-width:820px}
+details{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;padding:22px 0;font-size:19px;font-weight:600;min-height:44px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-weight:300;font-size:28px;line-height:.9;color:var(--acc);flex:none}
+details[open] summary::after{content:"−"}
+details p{color:var(--mute);padding:0 0 22px;max-width:44em}
+/* about */
+.about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+.app{display:flex;gap:18px;align-items:center;background:var(--bg);border-radius:22px;padding:24px}
+.app img,.app .ph{width:72px;height:72px;border-radius:17px;flex:none}
+.app img{box-shadow:0 0 0 1px var(--line)}
+.app .ph{display:grid;place-items:center;background:var(--card)}
+.app .ph svg{width:38px;height:38px}
+.app p{color:var(--mute);font-size:15px;margin-top:2px}
+.app .tag{display:inline-block;font-size:14px;font-weight:600;color:var(--acc);margin-top:6px}
+.app.soon{background:transparent;border:1.5px dashed var(--line)}
+@media(max-width:820px){.about{grid-template-columns:minmax(0,1fr)}}
+/* tabs & app views */
+.tabs a{display:inline-flex;align-items:center;min-height:44px}
+.tabs a[aria-current=page]{opacity:1;color:var(--acc);font-weight:600}
+.apps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.appcard{background:var(--card);border-radius:28px;padding:clamp(26px,3.5vw,40px);display:flex;flex-direction:column;gap:6px}
+.appcard.soon{background:transparent;border:1.5px dashed var(--line)}
+.appcard h2{font-size:clamp(28px,3.4vw,36px);margin-top:14px}
+.appcard p{color:var(--mute)}
+.appcard .links{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:auto;padding-top:22px}
+.ai{width:96px;height:96px;border-radius:22.5%;box-shadow:0 0 0 1px var(--line)}
+.ph{display:grid;place-items:center;background:var(--card)}
+.ph svg{width:52%;height:52%}
+.ph.big{width:120px;height:120px;margin:28px 0 22px}
+.back{font-size:17px}
+.more{font-size:17px}
+.soon3d{min-height:60vh}
+@media(max-width:700px){.apps{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){.bar{flex-wrap:wrap;height:auto;padding-top:8px}nav{order:3;width:100%}nav ul{display:flex;overflow-x:auto;margin:0;gap:22px;scrollbar-width:none}html{scroll-padding-top:110px}}
+/* footer */
+.support{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px}
+footer{border-top:1px solid var(--line);font-size:14px;color:var(--mute)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 28px;padding:28px max(5vw,16px)}
+footer ul{display:flex;flex-wrap:wrap;gap:8px 22px;list-style:none;margin:0;padding:0}
+footer a{color:var(--mute)}
+@media(prefers-reduced-motion:no-preference){.rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}.rise.d1{animation-delay:.12s}.rise.d2{animation-delay:.24s}@keyframes rise{from{opacity:0;transform:translateY(18px)}}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main" data-i="skip">Aller au contenu</a>
+<header>
+  <div class="bar">
+    <a class="logo" href="#home" aria-label="SystemBiology">System<b>Biology</b></a>
+    <nav aria-label="Apps" data-i-aria="navlabel">
+      <ul class="tabs">
+        <li><a href="#home" data-tab="home" data-i="tHome">Accueil</a></li>
+        <li><a href="#phenologic" data-tab="phenologic">PhenoLogic</a></li>
+        <li><a href="#app-3d" data-tab="app-3d" data-i="t3d">Modélisation 3D</a></li>
+        <li><a href="#support" data-i="nSup">Support</a></li>
+      </ul>
+    </nav>
+    <div class="lang" role="group" aria-label="Langue" data-i-aria="langlabel">
+      <button type="button" data-l="fr" lang="fr" aria-label="Français">FR</button>
+      <button type="button" data-l="en" lang="en" aria-label="English">EN</button>
+      <button type="button" data-l="es" lang="es" aria-label="Español">ES</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div data-view id="home">
+<section class="band" aria-labelledby="h-home">
+  <div class="wrap">
+    <div class="sec-head"><h1 id="h-home" class="rise" data-i="hTitle">Des outils iOS pour la science.</h1><p class="lead rise d1" data-i="hLead">SystemBiology est le studio d'un étudiant développeur. Chaque app part d'un besoin concret de laboratoire ou de terrain.</p></div>
+    <div class="apps rise d2">
+      <article class="appcard">
+        <img src="img/icon.png" width="96" height="96" alt="" class="ai">
+        <h2>PhenoLogic</h2>
+        <p data-i="app1">Le carnet de terrain pour le phénotypage.</p>
+        <p class="meta" data-i="heroMeta2">Gratuit · iPhone et iPad</p>
+        <div class="links"><a class="pill" href="#phenologic" data-i="discover">Découvrir</a><a class="more js-store" href="https://apps.apple.com/fr/app/phenologic/id6800425396" rel="noopener" data-i="avail">Disponible sur l'App Store ›</a></div>
+      </article>
+      <article class="appcard soon">
+        <div class="ai ph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></div>
+        <h2 data-i="app2t">Modélisation 3D</h2>
+        <p data-i="app2">Une nouvelle app est en préparation.</p>
+        <p class="meta" data-i="soon">Bientôt</p>
+        <div class="links"><a class="more" href="#app-3d" data-i="learn">En savoir plus ›</a></div>
+      </article>
+    </div>
+  </div>
+</section>
+</div>
+
+<div data-view id="phenologic" hidden>
+<section class="band hero" id="pl-top" aria-labelledby="h1">
+  <div class="wrap">
+    <div class="hero-top">
+      <img class="appicon rise" src="img/icon.png" width="104" height="104" alt="Icône de PhenoLogic" data-i-alt="iconAlt">
+      <div>
+        <h1 id="h1" class="rise" data-i="h1">Vos données de phénotypage, du terrain à Excel.</h1>
+        <p class="lead rise d1" data-i="lead">PhenoLogic est un carnet de terrain pour vos relevés de phénotypage. Saisissez, dictez ou scannez vos mesures, puis exportez un fichier Excel ou CSV prêt pour l'analyse. Tout reste sur votre appareil.</p>
+        <div class="cta rise d2">
+          <a class="store js-store" href="https://apps.apple.com/fr/app/phenologic/id6800425396" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.2 3.8-5.4 9.4H4.5a1.5 1.5 0 010-3h2.6L12 4.2zM9 17.6l-1.2 2.1a1.5 1.5 0 11-2.6-1.5L6.4 16zM13.6 9.9l1.7-3 4.2 7.4a1.5 1.5 0 11-2.6 1.5zM12.6 12.7h6.9a1.5 1.5 0 010 3h-5.2z"/></svg>
+            <span><small data-i="dl">Télécharger dans</small><strong>App Store</strong></span>
+          </a>
+          <span class="meta" data-i="heroMeta">Gratuit · iPhone et iPad · iOS 17 ou ultérieur</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap stage">
+    <div class="phone"><img class="js-shot" data-k="record" src="img/record-fr.webp" width="1320" height="2868" alt="Fiche d'un plot de tomate dans PhenoLogic : génotype, champs mesurés et relevé du 14 septembre" data-i-alt="heroAlt"></div>
+    <div class="link" aria-hidden="true"><span data-i="export">Export .xlsx ou .csv</span></div>
+    <div class="sheet">
+      <div class="sheet-top"><i aria-hidden="true"></i>tomato_A01.xlsx<span data-i="rows">5 relevés</span></div>
+      <div class="grid-x"><table>
+        <caption class="vh" data-i="tblCap">Exemple de fichier exporté par PhenoLogic</caption>
+        <thead><tr><th class="n" aria-hidden="true"></th><th>plot</th><th>date</th><th>height_cm</th><th>stem_mm</th><th>leaves</th></tr></thead>
+        <tbody id="sheetRows"></tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="how" aria-labelledby="h-how">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-how" data-i="howT">Trois gestes, zéro ressaisie.</h2></div>
+    <div class="steps">
+      <div class="step"><b>1</b><h3 data-i="s1t">Saisir ou dicter</h3><p data-i="s1p">Notez vos mesures au pied de la plante, au doigt ou à la voix, sans papier.</p></div>
+      <div class="step"><b>2</b><h3 data-i="s2t">Scanner le papier</h3><p data-i="s2p">Photographiez vos anciennes fiches de notation : les valeurs sont reconnues sur l'appareil et vous les vérifiez avant d'enregistrer.</p></div>
+      <div class="step"><b>3</b><h3 data-i="s3t">Exporter</h3><p data-i="s3p">Une ligne par relevé, une colonne par variable, en .xlsx ou en .csv, vers l'app de votre choix.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="features" aria-labelledby="h-feat">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-feat" data-i="featT">Pensée pour le terrain.</h2><p class="lead" data-i="featL">Tout ce qu'il faut pour suivre vos essais plot par plot, et rien de plus.</p></div>
+    <div class="cards">
+      <article class="card"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><h3 data-i="c1t">Champs sur mesure</h3><p data-i="c1p">Définissez vos propres variables (nombres ou texte), regroupez vos plots en lots et ajoutez des photos de suivi.</p></article>
+      <article class="card"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg><h3 data-i="c2t">Dictée vocale</h3><p data-i="c2p">Gardez les mains libres : la reconnaissance vocale d'iOS fonctionne sur l'appareil, aucun son n'est envoyé ni conservé.</p></article>
+      <article class="card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5.5A1.5 1.5 0 015.5 4H8M16 4h2.5A1.5 1.5 0 0120 5.5V8M20 16v2.5a1.5 1.5 0 01-1.5 1.5H16M8 20H5.5A1.5 1.5 0 014 18.5V16M4 12h16"/></svg><h3 data-i="c3t">Scan de fiches papier</h3><p data-i="c3p">Numérisez vos feuilles de notation existantes, colonne identifiant comprise, pour les rattacher à vos plots.</p></article>
+      <article class="card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v16h16"/><path d="M7 15l4-4 3 2 5-6"/></svg><h3 data-i="c4t">Courbes de croissance</h3><p data-i="c4p">Chaque variable en graphique ou en tableau, plot par plot, pour repérer une anomalie dès le terrain.</p></article>
+      <article class="card"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2"/><path d="M3.5 9h17M3.5 14.5h17M9.5 4v16M15 4v16"/></svg><h3 data-i="c5t">Import et export Excel ou CSV</h3><p data-i="c5p">Un tableau propre, prêt pour Excel, R ou Python. L'import vous permet aussi de reprendre des données existantes.</p></article>
+      <article class="card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 102.3-5.7M4 4v3h3"/><path d="M12 8v4l3 2"/></svg><h3 data-i="c6t">Historique et verrouillage</h3><p data-i="c6p">Retrouvez et restaurez une version précédente, et verrouillez une fiche pour éviter les modifications accidentelles.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="screens" aria-labelledby="h-shots">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-shots" data-i="shotsT">Voyez-la en action.</h2></div>
+    <div class="shots" id="shots" tabindex="0" role="region" aria-label="Captures d'écran de l'application" data-i-aria="shotsLabel">
+      <figure class="shot"><img src="img/s-record.webp" width="520" height="1052" loading="lazy" alt="" data-i-alt="sh1a"><figcaption><span data-i="sh1t">Votre carnet de terrain</span><span data-i="sh1p">Des fiches par plot, sans papier</span></figcaption></figure>
+      <figure class="shot"><img src="img/s-scan.webp" width="520" height="1052" loading="lazy" alt="" data-i-alt="sh2a"><figcaption><span data-i="sh2t">Scan des fiches papier</span><span data-i="sh2p">Les cellules reconnues sur l'appareil</span></figcaption></figure>
+      <figure class="shot"><img src="img/s-review.webp" width="520" height="1052" loading="lazy" alt="" data-i-alt="sh3a"><figcaption><span data-i="sh3t">Vérification avant import</span><span data-i="sh3p">Un score de confiance par valeur</span></figcaption></figure>
+      <figure class="shot"><img src="img/s-chart.webp" width="520" height="1052" loading="lazy" alt="" data-i-alt="sh4a"><figcaption><span data-i="sh4t">Suivi de la croissance</span><span data-i="sh4p">En graphique ou en tableau</span></figcaption></figure>
+      <figure class="shot"><img src="img/s-export.webp" width="520" height="1052" loading="lazy" alt="" data-i-alt="sh5a"><figcaption><span data-i="sh5t">Export Excel ou CSV</span><span data-i="sh5p">Quand vous le décidez</span></figcaption></figure>
+      <figure class="shot"><img src="img/s-privacy.webp" width="520" height="1052" loading="lazy" alt="" data-i-alt="sh6a"><figcaption><span data-i="sh6t">Aucune donnée collectée</span><span data-i="sh6p">Tout reste sur l'appareil</span></figcaption></figure>
+    </div>
+    <div class="ctl"><button type="button" id="prev" aria-label="Capture précédente" data-i-aria="prev">‹</button><button type="button" id="next" aria-label="Capture suivante" data-i-aria="next">›</button></div>
+  </div>
+</section>
+
+<section class="band" id="audience" aria-labelledby="h-aud">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-aud" data-i="audT">Pour celles et ceux qui mesurent le vivant.</h2></div>
+    <div class="cards three">
+      <article class="card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-5 9 5-9 5zM7 11.5V16c0 1.5 2.2 3 5 3s5-1.5 5-3v-4.5M21 9v5"/></svg><h3 data-i="a1t">Étudiants</h3><p data-i="a1p">Pour les TP, les stages et les mémoires : des données propres dès la sortie sur le terrain.</p></article>
+      <article class="card"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6l-5 9a2 2 0 001.8 3h10.4a2 2 0 001.8-3l-5-9V3M7.5 15h9"/></svg><h3 data-i="a2t">Chercheurs</h3><p data-i="a2p">Pour les campagnes de phénotypage : moins de ressaisie, moins d'erreurs, plus de temps pour l'analyse.</p></article>
+      <article class="card"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M7 9l3 3 3-4 4 3"/></svg><h3 data-i="a3t">Enseignants</h3><p data-i="a3p">Pour les sorties pédagogiques : chaque groupe rend un fichier au même format, facile à comparer.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="band deep" id="privacy" aria-labelledby="h-priv">
+  <div class="wrap privacy">
+    <div>
+      <h2 id="h-priv" data-i="privT">Aucune donnée collectée.</h2>
+      <p class="lead" data-i="privL">PhenoLogic n'a ni compte, ni serveur, ni outil d'analyse d'usage, ni traceur publicitaire. Vos données restent sur votre appareil.</p>
+      <p class="fine"><a class="js-policy" href="https://rpx200.github.io/phenologic/#fr" rel="noopener" data-i="privFine">Lire la politique de confidentialité complète ›</a></p>
+    </div>
+    <ul class="plist">
+      <li><div><b data-i="pr1t">Tout reste sur l'appareil</b><span data-i="pr1">Fichiers, mesures, relevés, photos et historique sont stockés uniquement dans l'espace privé de l'app.</span></div></li>
+      <li><div><b data-i="pr2t">Dictée traitée sur l'appareil</b><span data-i="pr2">La reconnaissance vocale d'iOS fonctionne localement. Aucun son n'est envoyé ni enregistré ; seule la transcription s'affiche.</span></div></li>
+      <li><div><b data-i="pr3t">Photos et appareil photo</b><span data-i="pr3">Les photos ajoutées et les fiches scannées sont analysées sur l'appareil et stockées localement. Aucune image n'est envoyée.</span></div></li>
+      <li><div><b data-i="pr4t">Vous gardez la main</b><span data-i="pr4">Un export (CSV, XLSX) n'a lieu que si vous le demandez, vers la destination que vous choisissez.</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="band" id="faq" aria-labelledby="h-faq">
+  <div class="wrap faq">
+    <div class="sec-head"><h2 id="h-faq" data-i="faqT">Questions fréquentes.</h2></div>
+    <details><summary data-i="q1">Combien coûte PhenoLogic ?</summary><p data-i="r1">PhenoLogic est gratuite sur l'App Store.</p></details>
+    <details><summary data-i="q2">Sur quels appareils fonctionne-t-elle ?</summary><p data-i="r2">Sur iPhone avec iOS 17 ou ultérieur et sur iPad avec iPadOS 17 ou ultérieur. Elle s'installe aussi sur les Mac à puce Apple.</p></details>
+    <details><summary data-i="q3">Faut-il une connexion internet ?</summary><p data-i="r3">Non. Saisie, dictée, scan, graphiques et export fonctionnent sans réseau, en plein champ.</p></details>
+    <details><summary data-i="q4">Quels formats de fichier sont pris en charge ?</summary><p data-i="r4">L'export et l'import se font en Excel (.xlsx) et en CSV, lisibles par Excel, Numbers, LibreOffice, R ou Python.</p></details>
+    <details><summary data-i="q5">Comment fonctionne le scan des fiches papier ?</summary><p data-i="r5">Photographiez la fiche, indiquez la colonne qui sert d'identifiant, puis vérifiez les valeurs reconnues et leur score de confiance avant d'enregistrer. Une fiche bien éclairée et à plat donne les meilleurs résultats.</p></details>
+    <details><summary data-i="q6">En quelles langues est l'app ?</summary><p data-i="r6">En français, en anglais et en espagnol.</p></details>
+  </div>
+</section>
+
+</div>
+
+<div data-view id="app-3d" hidden>
+<section class="band soon3d" aria-labelledby="h-3d">
+  <div class="wrap">
+    <p><a class="back" href="#home" data-i="back">‹ Toutes les apps</a></p>
+    <div class="ai ph big" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="1.4" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></div>
+    <h1 id="h-3d" data-i="app2t">Modélisation 3D</h1>
+    <p class="lead" data-i="d3Lead">La prochaine app de SystemBiology est en préparation. Écrivez-nous pour être prévenu de sa sortie.</p>
+    <div class="cta"><a class="pill" id="notify" href="mailto:systembiology@icloud.com" data-i="d3Btn">Être prévenu par e-mail</a></div>
+  </div>
+</section>
+</div>
+
+<section class="band" id="support" aria-labelledby="h-sup">
+  <div class="wrap support">
+    <div>
+      <h2 id="h-sup" data-i="supT">Besoin d'aide ?</h2>
+      <p class="lead" data-i="supL">Une question, un bug ou une idée de fonctionnalité : écrivez-nous, nous répondons à chaque message.</p>
+      <p class="lead" id="mail"></p>
+    </div>
+    <a class="pill js-store" href="https://apps.apple.com/fr/app/phenologic/id6800425396" rel="noopener" data-i="getApp">Obtenir PhenoLogic</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 SystemBiology</span>
+    <ul>
+      <li><a class="js-policy" href="https://rpx200.github.io/phenologic/#fr" rel="noopener" data-i="fPriv">Politique de confidentialité</a></li>
+      <li><a href="#support" data-i="nSup">Support</a></li>
+      <li><a class="js-store" href="https://apps.apple.com/fr/app/phenologic/id6800425396" rel="noopener">App Store</a></li>
+    </ul>
+    <span data-i="fApple">Apple, iPhone, iPad et App Store sont des marques d'Apple Inc.</span>
+  </div>
+</footer>
+
+<script>
+{
+/* Adresse e-mail de contact */
+const CONTACT_EMAIL = "systembiology@icloud.com";
+const STORE = {fr:"https://apps.apple.com/fr/app/phenologic/id6800425396",en:"https://apps.apple.com/app/phenologic/id6800425396",es:"https://apps.apple.com/es/app/phenologic/id6800425396"};
+const SHOT_LANG = {fr:"fr",en:"en",es:"en"};
+
+const T = {
+fr:{},
+en:{tHome:"Home",t3d:"3D modelling",hTitle:"iOS tools for science.",hLead:"SystemBiology is a student developer's studio. Each app starts from a real need in the lab or in the field.",heroMeta2:"Free · iPhone and iPad",discover:"Discover",learn:"Learn more ›",back:"‹ All apps",d3Lead:"SystemBiology's next app is in the works. Write to us to hear when it launches.",d3Btn:"Get notified by email",titleHome:"SystemBiology · iOS apps for science",title3d:"3D modelling · SystemBiology",mailSubj:"3D modelling app",
+skip:"Skip to content",navlabel:"Apps",langlabel:"Language",nFeat:"Features",nShots:"Preview",nPriv:"Privacy",nSup:"Support",
+iconAlt:"PhenoLogic icon",h1:"Your phenotyping data, from the field to Excel.",lead:"PhenoLogic is a field notebook for your phenotyping records. Enter, dictate or scan your measurements, then export an Excel or CSV file ready for analysis. Everything stays on your device.",
+dl:"Download on the",heroMeta:"Free · iPhone and iPad · iOS 17 or later",heroAlt:"A tomato plot record in PhenoLogic: genotype, measured fields and the September 14 record",export:"Export .xlsx or .csv",rows:"5 records",tblCap:"Example of a file exported by PhenoLogic",
+howT:"Three steps, no re-typing.",s1t:"Enter or dictate",s1p:"Record your measurements at the plant, by touch or by voice, without paper.",s2t:"Scan your paper",s2p:"Photograph your old scoring sheets: values are recognised on the device and you check them before saving.",s3t:"Export",s3p:"One row per record, one column per variable, as .xlsx or .csv, to the app of your choice.",
+featT:"Built for the field.",featL:"Everything you need to follow your trials plot by plot, and nothing more.",
+c1t:"Custom fields",c1p:"Define your own variables (numbers or text), group plots into batches and add follow-up photos.",c2t:"Voice dictation",c2p:"Keep your hands free: iOS speech recognition runs on the device, no audio is sent or kept.",c3t:"Paper sheet scanning",c3p:"Digitise your existing scoring sheets, identifier column included, and link them to your plots.",c4t:"Growth charts",c4p:"Each variable as a chart or a table, plot by plot, to spot an anomaly while still in the field.",c5t:"Excel or CSV import and export",c5p:"A clean table, ready for Excel, R or Python. Import also lets you bring in existing data.",c6t:"History and lock",c6p:"Find and restore an earlier version, and lock a record to avoid accidental edits.",
+shotsT:"See it in action.",shotsLabel:"App screenshots",
+sh1t:"Your field notebook",sh1p:"One record per plot, no paper",sh2t:"Paper sheet scanning",sh2p:"Cells recognised on the device",sh3t:"Check before import",sh3p:"A confidence score for each value",sh4t:"Growth tracking",sh4p:"As a chart or a table",sh5t:"Excel or CSV export",sh5p:"When you decide",sh6t:"No data collected",sh6p:"Everything stays on the device",prev:"Previous screenshot",next:"Next screenshot",
+audT:"For everyone who measures living things.",a1t:"Students",a1p:"For lab classes, internships and theses: clean data straight from the field.",a2t:"Researchers",a2p:"For phenotyping campaigns: less re-typing, fewer errors, more time for analysis.",a3t:"Teachers",a3p:"For field trips: every group hands in a file in the same format, easy to compare.",
+privT:"No data collected.",privL:"PhenoLogic has no account, no server, no usage analytics and no advertising tracker. Your data stays on your device.",privFine:"Read the full privacy policy ›",
+pr1t:"Everything stays on the device",pr1:"Files, measurements, records, photos and history are stored only in the app's private storage.",pr2t:"Dictation processed on the device",pr2:"iOS speech recognition runs locally. No audio is sent or recorded; only the transcription is shown.",pr3t:"Photos and camera",pr3:"Photos you add and sheets you scan are analysed on the device and stored locally. No image is sent anywhere.",pr4t:"You stay in control",pr4:"An export (CSV, XLSX) only happens when you ask for it, to the destination you choose.",
+faqT:"Frequently asked questions.",q1:"How much does PhenoLogic cost?",r1:"PhenoLogic is free on the App Store.",q2:"Which devices does it run on?",r2:"iPhone with iOS 17 or later and iPad with iPadOS 17 or later. It can also be installed on Apple silicon Macs.",q3:"Do I need an internet connection?",r3:"No. Entry, dictation, scanning, charts and export all work offline, out in the field.",q4:"Which file formats are supported?",r4:"Export and import use Excel (.xlsx) and CSV, readable in Excel, Numbers, LibreOffice, R or Python.",q5:"How does paper sheet scanning work?",r5:"Photograph the sheet, choose the column used as identifier, then check the recognised values and their confidence score before saving. A flat, well-lit sheet gives the best results.",q6:"Which languages is the app in?",r6:"French, English and Spanish.",
+aboutT:"iOS tools for science.",aboutL:"SystemBiology is a student developer's studio. Each app starts from a real need in the lab or in the field.",app1:"The field notebook for phenotyping.",avail:"Available on the App Store ›",app2t:"3D modelling",app2:"A new app is in the works.",soon:"Coming soon",
+supT:"Need help?",supL:"A question, a bug or a feature idea: write to us, we answer every message.",mailTxt:"Contact:",mailNone:"A contact address will be added here shortly.",getApp:"Get PhenoLogic",fPriv:"Privacy policy",fApple:"Apple, iPhone, iPad and App Store are trademarks of Apple Inc.",
+title:"SystemBiology · PhenoLogic",desc:"PhenoLogic, the free iOS app by SystemBiology: a field notebook for phenotyping. Enter, dictate or scan your records, then export them to Excel or CSV. Everything stays on the device."},
+es:{tHome:"Inicio",t3d:"Modelado 3D",hTitle:"Herramientas iOS para la ciencia.",hLead:"SystemBiology es el estudio de un estudiante desarrollador. Cada app nace de una necesidad real del laboratorio o del campo.",heroMeta2:"Gratis · iPhone y iPad",discover:"Descubrir",learn:"Más información ›",back:"‹ Todas las apps",d3Lead:"La próxima app de SystemBiology está en preparación. Escríbenos para enterarte de su lanzamiento.",d3Btn:"Avisarme por correo",titleHome:"SystemBiology · Apps iOS para la ciencia",title3d:"Modelado 3D · SystemBiology",mailSubj:"App de modelado 3D",
+skip:"Ir al contenido",navlabel:"Apps",langlabel:"Idioma",nFeat:"Funciones",nShots:"Vista previa",nPriv:"Privacidad",nSup:"Soporte",
+iconAlt:"Icono de PhenoLogic",h1:"Tus datos de fenotipado, del campo a Excel.",lead:"PhenoLogic es un cuaderno de campo para tus registros de fenotipado. Introduce, dicta o escanea tus medidas y exporta un archivo Excel o CSV listo para el análisis. Todo se queda en tu dispositivo.",
+dl:"Descárgalo en el",heroMeta:"Gratis · iPhone y iPad · iOS 17 o posterior",heroAlt:"Ficha de una parcela de tomate en PhenoLogic: genotipo, campos medidos y registro del 14 de septiembre",export:"Exportar .xlsx o .csv",rows:"5 registros",tblCap:"Ejemplo de archivo exportado por PhenoLogic",
+howT:"Tres gestos, sin volver a teclear.",s1t:"Introducir o dictar",s1p:"Anota tus medidas junto a la planta, con el dedo o con la voz, sin papel.",s2t:"Escanear el papel",s2p:"Fotografía tus antiguas fichas de puntuación: los valores se reconocen en el dispositivo y los revisas antes de guardar.",s3t:"Exportar",s3p:"Una fila por registro, una columna por variable, en .xlsx o .csv, hacia la app que elijas.",
+featT:"Pensada para el campo.",featL:"Todo lo necesario para seguir tus ensayos parcela por parcela, y nada más.",
+c1t:"Campos a medida",c1p:"Define tus propias variables (números o texto), agrupa parcelas en lotes y añade fotos de seguimiento.",c2t:"Dictado por voz",c2p:"Manos libres: el reconocimiento de voz de iOS funciona en el dispositivo, no se envía ni se guarda ningún audio.",c3t:"Escaneo de fichas en papel",c3p:"Digitaliza tus hojas de puntuación existentes, columna identificadora incluida, y vincúlalas a tus parcelas.",c4t:"Curvas de crecimiento",c4p:"Cada variable en gráfico o en tabla, parcela por parcela, para detectar una anomalía desde el campo.",c5t:"Importar y exportar Excel o CSV",c5p:"Una tabla limpia, lista para Excel, R o Python. La importación también permite recuperar datos existentes.",c6t:"Historial y bloqueo",c6p:"Recupera y restaura una versión anterior, y bloquea una ficha para evitar cambios accidentales.",
+shotsT:"Mírala en acción.",shotsLabel:"Capturas de pantalla de la app",
+sh1t:"Tu cuaderno de campo",sh1p:"Una ficha por parcela, sin papel",sh2t:"Escaneo de fichas en papel",sh2p:"Celdas reconocidas en el dispositivo",sh3t:"Revisión antes de importar",sh3p:"Una puntuación de confianza por valor",sh4t:"Seguimiento del crecimiento",sh4p:"En gráfico o en tabla",sh5t:"Exportación Excel o CSV",sh5p:"Cuando tú decidas",sh6t:"Ningún dato recopilado",sh6p:"Todo se queda en el dispositivo",prev:"Captura anterior",next:"Captura siguiente",
+audT:"Para quienes miden lo vivo.",a1t:"Estudiantes",a1p:"Para prácticas, estancias y trabajos de fin de grado: datos limpios desde el campo.",a2t:"Investigadores",a2p:"Para campañas de fenotipado: menos tecleo, menos errores, más tiempo para el análisis.",a3t:"Docentes",a3p:"Para salidas de campo: cada grupo entrega un archivo con el mismo formato, fácil de comparar.",
+privT:"Ningún dato recopilado.",privL:"PhenoLogic no tiene cuenta, ni servidor, ni análisis de uso, ni rastreador publicitario. Tus datos se quedan en tu dispositivo.",privFine:"Leer la política de privacidad completa ›",
+pr1t:"Todo se queda en el dispositivo",pr1:"Archivos, medidas, registros, fotos e historial se guardan solo en el espacio privado de la app.",pr2t:"Dictado procesado en el dispositivo",pr2:"El reconocimiento de voz de iOS funciona en local. No se envía ni se graba ningún audio; solo se muestra la transcripción.",pr3t:"Fotos y cámara",pr3:"Las fotos que añades y las fichas que escaneas se analizan en el dispositivo y se guardan en local. No se envía ninguna imagen.",pr4t:"Tú tienes el control",pr4:"Una exportación (CSV, XLSX) solo se hace cuando la pides, hacia el destino que elijas.",
+faqT:"Preguntas frecuentes.",q1:"¿Cuánto cuesta PhenoLogic?",r1:"PhenoLogic es gratuita en el App Store.",q2:"¿En qué dispositivos funciona?",r2:"En iPhone con iOS 17 o posterior y en iPad con iPadOS 17 o posterior. También se puede instalar en Mac con chip de Apple.",q3:"¿Hace falta conexión a internet?",r3:"No. El registro, el dictado, el escaneo, los gráficos y la exportación funcionan sin conexión, en pleno campo.",q4:"¿Qué formatos de archivo admite?",r4:"La exportación y la importación usan Excel (.xlsx) y CSV, legibles en Excel, Numbers, LibreOffice, R o Python.",q5:"¿Cómo funciona el escaneo de fichas en papel?",r5:"Fotografía la ficha, indica la columna que sirve de identificador y revisa los valores reconocidos y su puntuación de confianza antes de guardar. Una ficha plana y bien iluminada da los mejores resultados.",q6:"¿En qué idiomas está la app?",r6:"En francés, inglés y español.",
+aboutT:"Herramientas iOS para la ciencia.",aboutL:"SystemBiology es el estudio de un estudiante desarrollador. Cada app nace de una necesidad real del laboratorio o del campo.",app1:"El cuaderno de campo para el fenotipado.",avail:"Disponible en el App Store ›",app2t:"Modelado 3D",app2:"Una nueva app está en preparación.",soon:"Próximamente",
+supT:"¿Necesitas ayuda?",supL:"Una pregunta, un error o una idea de función: escríbenos, respondemos a cada mensaje.",mailTxt:"Contacto:",mailNone:"Pronto añadiremos aquí una dirección de contacto.",getApp:"Obtener PhenoLogic",fPriv:"Política de privacidad",fApple:"Apple, iPhone, iPad y App Store son marcas de Apple Inc.",
+title:"SystemBiology · PhenoLogic",desc:"PhenoLogic, la app iOS gratuita de SystemBiology: un cuaderno de campo para el fenotipado. Introduce, dicta o escanea tus registros y expórtalos a Excel o CSV. Todo se queda en el dispositivo."}
+};
+const FR_ALT={sh1a:"Fiche d'un plot avec ses champs de mesure",sh2a:"Fiche de notation papier en cours de scan, cellules encadrées",sh3a:"Tableau des valeurs reconnues avec leur score de confiance",sh4a:"Courbe de croissance de la hauteur d'un plot de tomate",sh5a:"Menu d'export CSV ou Excel au-dessus du tableau des relevés",sh6a:"Écran Confidentialité de l'app"};
+const EN_ALT={sh1a:"A plot record with its measurement fields",sh2a:"A paper scoring sheet being scanned, cells outlined",sh3a:"Table of recognised values with their confidence score",sh4a:"Height growth curve of a tomato plot",sh5a:"CSV or Excel export menu above the records table",sh6a:"The app's privacy screen"};
+const ES_ALT={sh1a:"Ficha de una parcela con sus campos de medida",sh2a:"Ficha de puntuación en papel durante el escaneo, celdas recuadradas",sh3a:"Tabla de valores reconocidos con su puntuación de confianza",sh4a:"Curva de crecimiento de la altura de una parcela de tomate",sh5a:"Menú de exportación CSV o Excel sobre la tabla de registros",sh6a:"Pantalla de privacidad de la app"};
+Object.assign(T.en,EN_ALT);Object.assign(T.es,ES_ALT);
+/* French = text already in the HTML */
+document.querySelectorAll("[data-i]").forEach(el=>{T.fr[el.dataset.i]=el.textContent.trim()});
+document.querySelectorAll("[data-i-aria]").forEach(el=>{T.fr[el.dataset.iAria]=el.getAttribute("aria-label")});
+document.querySelectorAll("[data-i-alt]").forEach(el=>{if(el.alt)T.fr[el.dataset.iAlt]=el.alt});
+Object.assign(T.fr,FR_ALT,{titleHome:"SystemBiology · Apps iOS pour la science",title3d:"Modélisation 3D · SystemBiology",mailSubj:"App de modélisation 3D",mailTxt:"Contact :",mailNone:"Une adresse de contact sera ajoutée ici prochainement.",title:document.title,desc:document.querySelector('meta[name=description]').content});
+
+/* rows from the app's own example export (Tomato A01) */
+const rows=[["Tomato A01","2026-08-25","16.7","3.9",8],["Tomato A01","2026-09-01","22.3","4.3",11],["Tomato A01","2026-09-08","27.0","4.7",14],["Tomato A01","2026-09-15","32.4","5.1",17],["Tomato A01","2026-09-22","37.8","5.5",20]];
+document.getElementById("sheetRows").innerHTML=rows.map((r,i)=>`<tr${i===rows.length-1?' class="new"':''}><td class="n" aria-hidden="true">${i+2}</td>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("");
+
+const mail=document.getElementById("mail");
+const setMail=d=>{
+  mail.textContent="";
+  if(CONTACT_EMAIL){mail.append(d.mailTxt+" ");const a=document.createElement("a");a.href="mailto:"+CONTACT_EMAIL;a.textContent=CONTACT_EMAIL;mail.append(a)}
+  else mail.textContent=d.mailNone;
+};
+
+
+/* tabs: one view per app, chosen by the #hash */
+let cur="fr";
+const views=[...document.querySelectorAll("[data-view]")];
+let view=views[0];
+const setTitle=()=>{const d=T[cur]||T.fr;document.title=view.id==="phenologic"?d.title:view.id==="app-3d"?d.title3d:d.titleHome};
+const route=()=>{
+  const h=decodeURIComponent(location.hash.slice(1));
+  const el=h?document.getElementById(h):null;
+  let v=views.find(x=>x.id===h);
+  if(!v&&el)v=el.closest("[data-view]")||view;
+  if(!v)v=views[0];
+  const changed=v!==view;
+  view=v;
+  views.forEach(x=>x.hidden=x!==v);
+  document.querySelectorAll("[data-tab]").forEach(a=>{if(a.dataset.tab===v.id)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  if(el&&el!==v)el.scrollIntoView();else if(changed||h===v.id)window.scrollTo(0,0);
+  setTitle();
+};
+const setLang=l=>{
+  const d=T[l]||T.fr;
+  document.documentElement.lang=l;
+  document.querySelectorAll("[data-i]").forEach(el=>{const v=d[el.dataset.i];if(v!=null)el.textContent=v});
+  document.querySelectorAll("[data-i-aria]").forEach(el=>{const v=d[el.dataset.iAria];if(v!=null)el.setAttribute("aria-label",v)});
+  document.querySelectorAll("[data-i-alt]").forEach(el=>{const v=d[el.dataset.iAlt];if(v!=null)el.alt=v});
+  document.querySelectorAll(".js-shot").forEach(img=>img.src=`img/${img.dataset.k}-${SHOT_LANG[l]}.webp`);
+  document.querySelectorAll(".js-store").forEach(a=>a.href=STORE[l]);
+  document.querySelectorAll(".js-policy").forEach(a=>a.href="https://rpx200.github.io/phenologic/#"+l);
+  cur=l;
+  document.getElementById("notify").href="mailto:"+CONTACT_EMAIL+"?subject="+encodeURIComponent(d.mailSubj);
+  setTitle();
+  document.querySelector('meta[name=description]').content=d.desc;
+  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.l===l)));
+  setMail(d);
+  try{localStorage.setItem("sb-lang",l)}catch(e){}
+};
+document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.l)));
+
+let start="";
+try{start=localStorage.getItem("sb-lang")||""}catch(e){}
+if(!T[start]){const n=(navigator.language||"fr").slice(0,2);start=T[n]?n:"en"}
+setLang(start);
+route();
+addEventListener("hashchange",route);
+
+/* carousel */
+const sc=document.getElementById("shots");
+const step=dir=>{const w=sc.querySelector(".shot").getBoundingClientRect().width+22;sc.scrollBy({left:dir*w,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"})};
+document.getElementById("prev").addEventListener("click",()=>step(-1));
+document.getElementById("next").addEventListener("click",()=>step(1));
+sc.addEventListener("keydown",e=>{if(e.key==="ArrowRight"){e.preventDefault();step(1)}if(e.key==="ArrowLeft"){e.preventDefault();step(-1)}});
+}
+</script>
+</body>
+</html>
